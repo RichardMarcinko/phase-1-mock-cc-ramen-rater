@@ -2,6 +2,53 @@ fetch('http://localhost:3000/ramens')
     .then((resp) => resp.json())
     .then((data) => renderImages(data))
 
+    function renderImages(ramenArr) {
+        const div = document.querySelector('#ramen-menu')
+        ramenArr.forEach((ramenObj) => {
+            const ramenImg = document.createElement('img')
+            ramenImg.src = ramenObj.image
+            div.append(ramenImg)
+            ramenImg.addEventListener('click', (e) => {
+                const detailImg = document.querySelector('.detail-image')
+                const detailName = document.querySelector('.name')
+                const detailRest = document.querySelector('.restaurant')
+                const detailRating = document.querySelector('#rating-display')
+                const detailComment = document.querySelector('#comment-display')
+                detailImg.src = ramenObj.image
+                detailName.textContent = ramenObj.name
+                detailRest.textContent = ramenObj.restaurant
+                detailRating.textContent = ramenObj.rating
+                detailComment.innerHTML = ''
+                //We will not have to do this innerHTML for a while maybe.
+                ramenObj.comment.forEach((commentObj) => {
+                    const p = document.createElement('p')
+                    detailComment.appendChild(p)
+                    p.textContent = `"${commentObj.text}" -${commentObj.name}`
+                })
+            })
+        })
+    }
+    const form = document.querySelector('#new-ramen')
+    form.addEventListener(('submit'), (e) => {
+        e.preventDefault()
+        const newRamen = {
+            name : e.target.name.value,
+            restaurant: e.target.restaurant.value,
+            image : e.target.image.value,
+            rating : e.target.rating.value,
+            comment : [{text: e.target.comment.value, name: 'Terminator'}],
+        }
+        renderImages([newRamen])
+    })
+
+
+
+
+
+
+
+
+
 function renderImages(ramenArr) {
     const div = document.querySelector('#ramen-menu')
     ramenArr.forEach((ramenObj) => {
